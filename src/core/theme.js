@@ -23,4 +23,5 @@ export function applyTheme(name = store.get().theme) {
   root.style.setProperty('--ui-scale', store.get().uiScale);
   document.body.classList.toggle('reduce-motion', !!store.get().reducedMotion);
   document.body.classList.toggle('high-contrast', !!store.get().highContrast);
+  document.body.classList.toggle('no-mouse-effects', !store.get().mouseEffects);
 }

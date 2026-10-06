@@ -16,6 +16,8 @@ const defaults = {
   highContrast: false,
   uiScale: 1,
   uiSounds: false,
+  keybinds: { fps:'F7', cps:'F8', keystrokes:'F9', particles:'F10', trails:'F11', background:'KeyB', console:'F3' },
+  autoclicker: { enabled:false, cps:10, mode:'hold' },
   hud: {
     fps: { enabled: true, x: 20, y: 95, opacity: 1, scale: 1 },
     cps: { enabled: true, x: 20, y: 160, opacity: 1, scale: 1 },
