@@ -1,3 +1,5 @@
+WARNING!! This project is 108% vibe coded
+
 # NEXUS — Personal Interactive Web OS
 
 A dependency-light first build of the personal interactive web OS described in the project brief.
