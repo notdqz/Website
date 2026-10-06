@@ -15,7 +15,7 @@ export const backgroundMeta = {
 
 export class BackgroundEngine {
   constructor(canvas){ this.canvas=canvas;this.ctx=canvas.getContext('2d');this.w=0;this.h=0;this.nodes=[];this.particles=[];this.stars=[];this.streams=[];this.running=false;this.last=0;addEventListener('resize',()=>this.resize());this.resize();this.seed(); }
-  resize(){const dpr=Math.min(devicePixelRatio||1,2);this.w=innerWidth;this.h=innerHeight;this.canvas.width=this.w*dpr;this.canvas.height=this.h*dpr;this.canvas.style.width=this.w+'px';this.canvas.style.height=this.h+'px';this.ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize(){const dpr=Math.min(devicePixelRatio||1,2)*(store.get().resolutionScale||1);this.w=innerWidth;this.h=innerHeight;this.canvas.width=this.w*dpr;this.canvas.height=this.h*dpr;this.canvas.style.width=this.w+'px';this.canvas.style.height=this.h+'px';this.ctx.setTransform(dpr,0,0,dpr,0,0);}
   seed(){const s=store.get(); const density=Math.max(.2,s.particleDensity);
     this.nodes=Array.from({length:Math.round(70*density)},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0009,vy:(Math.random()-.5)*.0009,r:.8+Math.random()*1.6,p:Math.random()}));
     this.particles=Array.from({length:Math.round(220*density)},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0004,vy:(Math.random()-.5)*.0004,z:Math.random()}));
