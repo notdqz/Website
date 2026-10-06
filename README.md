@@ -1,47 +1,61 @@
-WARNING!! This project is 108% vibe coded
+# NEXUS Personal Web OS — v0.2
 
-# NEXUS — Personal Interactive Web OS
+NEXUS is a modular personal interactive web environment built for static hosting and local execution. It is intentionally not a generic dashboard: the application shell, glass surfaces, visual background engine, HUD layer, game runtime, and future provider/companion boundaries are separate modules.
 
-A dependency-light first build of the personal interactive web OS described in the project brief.
+## v0.2 additions
+
+- Local HTML game library backed by IndexedDB
+- Game runtime iframe with local/same-origin execution bridge
+- Game-scoped developer console with `help`, `clear`, `status`, `context`, and `eval <expression>`
+- Game console output capture for `console.log/info/warn/error`
+- Console minimize/maximize/resize/drag behavior
+- Central utility registry and configurable utility keybinds
+- HUD toggles plus direct HUD scale/opacity controls
+- Page-local synthetic autoclicker with explicit browser-only limitation
+- Provider-neutral AI workspace with local conversation storage
+- OpenAI / Claude / DeepSeek provider architecture stubs without embedded secrets
+- Spoof/tab appearance controls for document title and SPA history state
+- Manual render-resolution scaling tied to canvas render cost
+- Background and visual systems remain modular and persistent
 
 ## Run locally
 
-Because this uses ES modules, serve the directory with any static file server.
-
-Examples:
+Serve the folder over HTTP so browser modules and IndexedDB behave consistently:
 
 ```bash
-python3 -m http.server 4173
+python -m http.server 8000
 ```
 
-Then open `http://localhost:4173`.
+Then open `http://localhost:8000/`.
 
-You can also upload the contents of this folder to GitHub Pages. No build step or npm package is required.
+The same static build can be deployed to GitHub Pages.
 
-## What is implemented
+## Project structure
 
-- Modular router, persistent state store, theme engine, performance presets
-- Liquid-glass UI shell with responsive layout and dynamic cursor lighting
-- 9 independent canvas background systems
-- Cursor trail and click-particle effects
-- Live FPS/CPS/keystrokes HUDs with drag persistence
-- Active Utilities HUD
-- Settings application with themes, quality, background, effects, HUD, import/export, and reset
-- Online/offline status detection
-- Developer-style console shell with honest same-origin/local-game limitation
-- Placeholder architecture pages for Games, AI, Proxy, Phone, Spoof, Utilities
+```text
+src/
+  ai/             provider interfaces + local AI chat store
+  backgrounds/    interactive canvas background engine
+  core/           store, routing, theme, performance
+  effects/        input + mouse/click effect engines
+  games/          local game persistence and runtime bridge
+  hud/            persistent HUD manager
+  pages/          page renderers and page binders
+  ui/             application shell / console
+  utilities/      utility registry + keybind infrastructure
+```
 
-## Important browser boundaries
+## Capability boundaries
 
-This first build does **not** fake capabilities a static browser page cannot securely provide. In particular:
+The project deliberately does not fake browser privileges.
 
-- A browser page cannot become a system-wide proxy by itself.
-- A static GitHub Pages build should not contain private API secrets.
-- Cross-origin iframes cannot be inspected like same-origin/local games.
-- Browser JavaScript cannot manufacture trusted OS-level mouse clicks for a real autoclicker.
-- Unrestricted phone control needs supported APIs and usually a companion application.
-- JavaScript can modify document title, favicon, and SPA history state, but not arbitrarily rewrite the real browser address bar.
+- GitHub Pages cannot safely hold private provider secrets by itself.
+- Cross-origin iframes cannot be treated as same-origin game contexts.
+- A static webpage cannot become a system-wide network proxy.
+- Browser JavaScript cannot arbitrarily rewrite the real browser address bar.
+- Unrestricted phone control requires browser-supported protocols and/or a companion application.
+- The included autoclicker only dispatches synthetic clicks inside the NEXUS page.
 
-## Extension strategy
+## Validation
 
-Each major system is already isolated in its own module. Add future providers/integrations beside the corresponding module instead of expanding `main.js` into a monolith.
+The v0.2 build was validated with JavaScript syntax checks and a local static HTTP server fetch of the primary HTML, CSS, and module assets.
