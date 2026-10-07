@@ -1,0 +1,10 @@
+export class BaseAIProvider{
+ constructor(config={}){this.config=config}
+ get configured(){return !!this.config.endpoint&&!!this.config.model&&!!this.config.apiKey}
+ async send(){throw new Error('Provider is not configured')}
+}
+function headers(key){return {'Content-Type':'application/json','Authorization':`Bearer ${key}`}}
+export class OpenAIProvider extends BaseAIProvider{async send(messages){if(!this.configured)throw new Error('OpenAI provider is not configured');const r=await fetch(this.config.endpoint,{method:'POST',headers:headers(this.config.apiKey),body:JSON.stringify({model:this.config.model,messages})});if(!r.ok)throw new Error(`Provider HTTP ${r.status}`);const d=await r.json();return d.choices?.[0]?.message?.content||d.output_text||JSON.stringify(d)}}
+export class DeepSeekProvider extends BaseAIProvider{async send(messages){if(!this.configured)throw new Error('DeepSeek provider is not configured');const r=await fetch(this.config.endpoint,{method:'POST',headers:headers(this.config.apiKey),body:JSON.stringify({model:this.config.model,messages})});if(!r.ok)throw new Error(`Provider HTTP ${r.status}`);const d=await r.json();return d.choices?.[0]?.message?.content||JSON.stringify(d)}}
+export class AnthropicProvider extends BaseAIProvider{async send(messages){if(!this.configured)throw new Error('Claude provider is not configured');const r=await fetch(this.config.endpoint,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':this.config.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:this.config.model,max_tokens:1024,messages})});if(!r.ok)throw new Error(`Provider HTTP ${r.status}`);const d=await r.json();return d.content?.map(x=>x.text||'').join('')||JSON.stringify(d)}}
+export const providerCatalog={openai:{name:'OpenAI',factory:c=>new OpenAIProvider(c)},anthropic:{name:'Claude',factory:c=>new AnthropicProvider(c)},deepseek:{name:'DeepSeek',factory:c=>new DeepSeekProvider(c)}};
