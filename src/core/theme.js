@@ -21,6 +21,9 @@ export function applyTheme(name = store.get().theme) {
   root.style.setProperty('--bg-2', t.bg2);
   root.style.setProperty('--blur', `${store.get().blur}px`);
   root.style.setProperty('--ui-scale', store.get().uiScale);
+  document.body.dataset.stretch = store.get().stretchToViewport ? 'true' : 'false';
+  document.body.dataset.aspect = store.get().aspectRatio || 'native';
+  root.style.setProperty('--glow-strength', store.get().glow);
   document.body.classList.toggle('reduce-motion', !!store.get().reducedMotion);
   document.body.classList.toggle('high-contrast', !!store.get().highContrast);
   document.body.classList.toggle('no-mouse-effects', !store.get().mouseEffects);
