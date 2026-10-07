@@ -1,61 +1,71 @@
-# NEXUS Personal Web OS — v0.2
+# NEXUS Personal Web OS — v0.3
 
-NEXUS is a modular personal interactive web environment built for static hosting and local execution. It is intentionally not a generic dashboard: the application shell, glass surfaces, visual background engine, HUD layer, game runtime, and future provider/companion boundaries are separate modules.
+V0.3 is the **actual feature implementation pass**. It keeps the v0.2 visual foundation but replaces several cosmetic/placeholder paths with working browser-side systems.
 
-## v0.2 additions
+## Working in this build
 
-- Local HTML game library backed by IndexedDB
-- Game runtime iframe with local/same-origin execution bridge
-- Game-scoped developer console with `help`, `clear`, `status`, `context`, and `eval <expression>`
-- Game console output capture for `console.log/info/warn/error`
-- Console minimize/maximize/resize/drag behavior
-- Central utility registry and configurable utility keybinds
-- HUD toggles plus direct HUD scale/opacity controls
-- Page-local synthetic autoclicker with explicit browser-only limitation
-- Provider-neutral AI workspace with local conversation storage
-- OpenAI / Claude / DeepSeek provider architecture stubs without embedded secrets
-- Spoof/tab appearance controls for document title and SPA history state
-- Manual render-resolution scaling tied to canvas render cost
-- Background and visual systems remain modular and persistent
+- Static GitHub Pages-compatible frontend; no required backend for the core shell.
+- Connection model separates application, network, backend, AI and Spotify states.
+- Settings are opened by the gear; there is no Settings route in the main navigation.
+- Persistent local profile with migration from the v0.1/v0.2 `nexus-webos:v1` storage key.
+- Real UI scale that transforms the application shell and HUD.
+- Real render scale for Canvas-based visual systems.
+- Aspect-ratio composition modes and viewport stretch mode.
+- Live quality presets that change Canvas resolution, particle counts, blur, glow and interaction behavior.
+- Six separate Canvas background systems:
+  - Interactive Network
+  - Particle Constellation
+  - Digital Grid
+  - Geometric Network
+  - Liquid Aurora
+  - Minimal Ambient
+- Interactive Network includes moving nodes, proximity links, cursor influence and lighting.
+- FPS HUD uses requestAnimationFrame timing.
+- CPS HUD reads actual pointer input.
+- Keystrokes HUD reads actual keyboard input and can auto-switch between WASD and arrow keys.
+- Active Utilities HUD lists only enabled utilities.
+- HUD widgets can be dragged and their position/scale/opacity persist.
+- Utilities page controls HUDs, mouse/click effects, trails, particles and the page-local synthetic autoclicker.
+- Local HTML game import/storage uses IndexedDB.
+- Local game runtime supports launch, reload, stop, fullscreen, and a same-origin console bridge.
+- AI workspace supports local conversation persistence, rename/delete/clear, file attachment, provider/model/endpoint/key configuration, and real HTTP requests to the configured endpoint.
+- Spoof page genuinely changes document title and favicon.
+- Proxy/Phone pages provide real capability/service-boundary controls and optional helper endpoint testing rather than fake connections.
+- Data export/import/reset.
 
-## Run locally
+## Honest browser limitations
 
-Serve the folder over HTTP so browser modules and IndexedDB behave consistently:
+- GitHub Pages is an online static host. The application therefore reports `ONLINE` when loaded; lack of a backend is reported separately.
+- A static page cannot become a system-wide proxy.
+- A webpage cannot arbitrarily rewrite the browser address bar.
+- Phone mirroring/control requires supported browser APIs, explicit permissions, or a companion application.
+- AI direct-browser calls can be blocked by provider CORS rules. A CORS-enabled endpoint or backend adapter is required in that case.
+- AI keys entered into this personal build are stored in local browser storage. They are never hard-coded into the repository, but users should understand that browser-stored secrets are not equivalent to server-side secret storage.
+- Imported local games are stored as HTML and launched in an isolated iframe. Cross-origin execution remains subject to normal browser security.
 
-```bash
-python -m http.server 8000
-```
+## V0.3 audit result
 
-Then open `http://localhost:8000/`.
+### Replaced
 
-The same static build can be deployed to GitHub Pages.
+- `CONNECTED/OFFLINE` was replaced with separate connection states.
+- Settings route was replaced with a gear-opened system settings overlay.
+- UI Scale now affects the actual application shell.
+- Quality presets now alter live rendering behavior.
+- Render Scale now changes Canvas backing resolution.
+- Background selection now swaps independent Canvas systems.
+- Home was reduced to a launch/status surface.
+- HUDs are actual persistent overlays rather than informational counts.
+- AI no longer pretends to be connected: it either makes a real configured request or reports that no request was sent.
 
-## Project structure
+### Still intentionally external / partial
 
-```text
-src/
-  ai/             provider interfaces + local AI chat store
-  backgrounds/    interactive canvas background engine
-  core/           store, routing, theme, performance
-  effects/        input + mouse/click effect engines
-  games/          local game persistence and runtime bridge
-  hud/            persistent HUD manager
-  pages/          page renderers and page binders
-  ui/             application shell / console
-  utilities/      utility registry + keybind infrastructure
-```
-
-## Capability boundaries
-
-The project deliberately does not fake browser privileges.
-
-- GitHub Pages cannot safely hold private provider secrets by itself.
-- Cross-origin iframes cannot be treated as same-origin game contexts.
-- A static webpage cannot become a system-wide network proxy.
-- Browser JavaScript cannot arbitrarily rewrite the real browser address bar.
-- Unrestricted phone control requires browser-supported protocols and/or a companion application.
-- The included autoclicker only dispatches synthetic clicks inside the NEXUS page.
+- Spotify playback integration: **PARTIALLY IMPLEMENTED** — no Spotify account/auth service is bundled in the static build, so Spotify remains `DISCONNECTED` until a real integration is attached.
+- Phone control: **PARTIALLY IMPLEMENTED** — service boundary and helper endpoint testing exist; unrestricted device control is outside normal static-browser privileges.
+- Proxy: **PARTIALLY IMPLEMENTED** — helper endpoint testing exists; system-wide proxying needs a local helper/backend.
+- Account/cloud sync: **NOT IMPLEMENTED** in this pass; local persistence is the source of truth.
 
 ## Validation
 
-The v0.2 build was validated with JavaScript syntax checks and a local static HTTP server fetch of the primary HTML, CSS, and module assets.
+- Every JavaScript module passes `node --check`.
+- The project serves successfully from a local static HTTP server.
+- The Chromium headless smoke test was attempted, but the environment's Chromium process did not terminate cleanly under the test harness, so this build does **not** claim a successful automated browser smoke test.
